@@ -1,6 +1,6 @@
 # Crypto Market Regime Classifier Documentation
 
-This document summarizes the initial project scaffold, what each created file does, and the intended run order for a local MVP demo.
+This document provides a deeper walkthrough of the project architecture, data pipeline, machine-learning workflow, API layer, frontend dashboard, and local demo path.
 
 ## Files Created
 
@@ -28,7 +28,7 @@ Optional local PostgreSQL service. Since you already have PostgreSQL installed a
 Example environment variables. The important value for the MVP is:
 
 ```text
-DATABASE_URL=postgresql+psycopg://<insert_user>:<insert_pass>@localhost:5433/crypto_regime
+DATABASE_URL=postgresql+psycopg://<POSTGRES_USER>:<POSTGRES_PASSWORD>@localhost:5433/<POSTGRES_DB>
 ```
 
 Update your real `.env` to match your local PostgreSQL username, password, host, port, and database name.
@@ -280,7 +280,7 @@ The full run order is:
 
 ## Smallest Path To A Working Local Demo
 
-Because you already have PostgreSQL installed and can manage it through DBeaver, skip Docker for now.
+If you already have PostgreSQL installed locally, you can skip Docker and create the database manually with a tool such as DBeaver or psql.
 
 ### 1. Create A Database
 
@@ -290,7 +290,7 @@ In DBeaver, create a PostgreSQL database named:
 crypto_regime
 ```
 
-You can use another name if you prefer, but then your `DATABASE_URL` must match it.
+You can use another name if you prefer, but then your `DATABASE_URL` and `POSTGRES_DB_B` must match it.
 
 ### 2. Create `.env`
 
@@ -300,19 +300,19 @@ From Git Bash at the repo root:
 cp .env.example .env
 ```
 
-Edit `.env` so `DATABASE_URL` matches your local PostgreSQL credentials.
+Edit `.env` so `DATABASE_URL` and others matches your local PostgreSQL credentials.
 
 Example:
 
 ```text
-DATABASE_URL=postgresql+psycopg://<insert_user>:<insert_pass>@localhost:5433/crypto_regime
+DATABASE_URL=postgresql+psycopg://<POSTGRES_USER>:<POSTGRES_PASSWORD>@localhost:5433/<POSTGRES_DB>
 VITE_API_BASE_URL=http://localhost:8000
 COINRANKING_API_KEY=replace_me
 ```
 
 ### 3. Run The Schema
 
-In DBeaver, open `db/schema.sql` and execute it against the `crypto_regime` database.
+In DBeaver, open `db/schema.sql` and execute it against the `POSTGRES_DB` database.
 
 This creates the tables and inserts the five coin rows.
 

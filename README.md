@@ -4,6 +4,14 @@ A full-stack portfolio project that fetches real crypto market data, trains an e
 
 The app turns daily OHLCV data into rolling features such as returns, volatility, moving-average ratios, drawdown from recent highs, and volume trend. A rule-based labeling step creates five market regimes, then a scikit-learn classifier learns those regimes and writes daily predictions back to PostgreSQL for the FastAPI and React dashboard.
 
+## Portfolio Highlights
+
+- Built an end-to-end full-stack machine-learning dashboard from raw market data to frontend visualization.
+- Designed a PostgreSQL schema for OHLCV prices, model runs, and regime predictions.
+- Implemented a Python pipeline for data fetching, ingestion, feature engineering, labeling, model training, and prediction persistence.
+- Exposed model outputs through FastAPI endpoints consumed by a React dashboard.
+- Added explainable regime summaries based on model features rather than presenting predictions as a black box.
+
 ## Screenshots
 
 Main dashboard view:
@@ -22,6 +30,12 @@ Regime changes table:
 - A regime timeline across real historical market data
 - A table of regime-change dates, estimated price, confidence, and key features
 - A short rule-based explanation for the latest prediction
+
+## Why I Built This
+
+Crypto dashboards usually show price charts, but they often do not explain what market condition an asset appears to be in. This project turns raw OHLCV market data into features, labels historical market regimes, trains a baseline classifier, and exposes the results through a full-stack dashboard.
+
+The goal was to demonstrate an end-to-end product engineering workflow: data ingestion, feature engineering, model training, PostgreSQL persistence, FastAPI endpoints, and a React visualization layer.
 
 ## Stack
 
@@ -80,8 +94,12 @@ docker compose up -d postgres
 3. Create a Python virtual environment and install dependencies:
 
 ```bash
-python -m venv .venv
+# Windows Git Bash
 source .venv/Scripts/activate
+
+# macOS/Linux
+source .venv/bin/activate
+
 pip install -r requirements.txt
 ```
 
@@ -94,10 +112,10 @@ psql "$DATABASE_URL" -f db/schema.sql
 If `psql` is not on your PATH, run the schema through Docker:
 
 ```bash
-docker compose exec -T postgres psql -U crypto -d crypto_regime < db/schema.sql
+docker compose exec -T postgres psql -U <POSTGRES_USER> -d <POSTGRES_DB> < db/schema.sql
 ```
 
-5. Fetch real Coinbase OHLCV CSVs (not needed if CSV files are already present in ./data/raw)
+5. Fetch real Coinbase OHLCV CSVs
 
 ```bash
 python -m ml.fetch_data --source coinbase --fallback-source none --days 1000 --force
@@ -158,15 +176,28 @@ python -m ml.train --write-db
 - `GET /api/regime/{symbol}/history`
 - `GET /api/regime/{symbol}/explain`
 
+## Validation
+
+Current validation includes:
+- API health check through `GET /health`
+- Database row checks after ingestion and training
+- Model metrics written to `artifacts/training_metrics.json`
+- Frontend smoke test through the local Vite dashboard
+
+Planned improvements include automated unit tests for feature generation, regime labeling, and API responses.
+
 ## Future Improvements
 
-- Use Tailwind CSS and scope component styling
-- Update the look and feel of the graph
-- Add support to type in any coin to classifier
-- Support more fetch protocols from market data providers
-- Add scheduled refresh jobs for prices and predictions
-- Add richer model evaluation and walk-forward validation
-- Host the site live on AWS or Vercel 
+- Add walk-forward validation and richer model evaluation metrics.
+- Add scheduled jobs for daily data refreshes and prediction updates.
+- Add support for searching and classifying additional crypto assets.
+- Improve chart interactions, tooltip detail, and responsive dashboard styling.
+- Add deployment support for the API, database, and frontend.
+- Add CI checks for formatting, linting, tests, and build validation.
+
+## Model Notes
+
+This is a baseline portfolio model, not a trading system or financial advice. The current labels are generated from transparent rules using momentum, moving-average ratios, volatility, and drawdown. The classifier is intended to demonstrate an explainable machine-learning workflow and can be improved with walk-forward validation, richer labeling, and live scheduled retraining.
 
 ## More Detailed Documentation
 
