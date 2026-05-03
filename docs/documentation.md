@@ -21,7 +21,7 @@ Python dependencies for the backend and ML pipeline:
 
 `docker-compose.yml`
 
-Optional local PostgreSQL service. Since you already have PostgreSQL installed and use DBeaver, this file is not required for your smallest demo path.
+If you already have PostgreSQL installed locally, you can skip Docker and create the database manually with a tool such as DBeaver or psql.
 
 `.env.example`
 
@@ -318,11 +318,13 @@ This creates the tables and inserts the five coin rows.
 
 ### 4. Install Python Dependencies
 
-From Git Bash at the repo root:
-
 ```bash
-python -m venv .venv
+# Windows Git Bash
 source .venv/Scripts/activate
+
+# macOS/Linux
+source .venv/bin/activate
+
 python -m pip install -r requirements.txt
 ```
 
